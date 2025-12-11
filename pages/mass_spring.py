@@ -218,7 +218,7 @@ def draw_frame(t_current: float):
 if not animate:
     draw_frame(0.0)
 else:
-    n_frames = 80
+    n_frames = 120
     for t_cur in np.linspace(0.0, float(t_max), n_frames):
         draw_frame(t_cur)
         time.sleep(0.01)
