@@ -3,6 +3,9 @@ import numpy as np
 
 # Pages
 pages = {
+    'Home': [
+        st.Page('pages/home.py', title = 'Math 211 Differential Equations')
+    ],
     'First Order ODEs': [
         st.Page('pages/newton_cooling.py', title = 'Newton\'s Law of Cooling'),
         st.Page('pages/slope_fields.py', title = 'Slope Fields')
