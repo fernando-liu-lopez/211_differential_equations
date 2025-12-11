@@ -279,7 +279,7 @@ if show_sol1:
             color="yellow",
         )]))
     except Exception as e:
-    st.warning(f"Could not compute solution curve 1: {e}")
+        st.warning(f"Could not compute solution curve 1: {e}")
 
 
 if show_sol2:
