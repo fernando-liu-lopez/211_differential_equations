@@ -6,4 +6,4 @@ st.set_page_config(
     layout="wide",
 )
 
-st.title("211 - Differential Equations and Linear Algebra")
+st.title("Differential Equations and Linear Algebra")
