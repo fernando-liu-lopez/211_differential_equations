@@ -244,41 +244,62 @@ legend_items = []
 #   Solution curves
 # -----------------------------
 def f_scalar(t, y):
-    return float(f(np.array(t), np.array(y)))
+    try:
+        val = f(np.array(t), np.array(y))
+
+        # If val is an array, get a scalar
+        if isinstance(val, np.ndarray):
+            val = val.item()
+
+        # If it's complex or nan/inf, fall back to 0
+        if not np.isfinite(val):
+            return 0.0
+        if isinstance(val, complex):
+            return float(val.real)
+
+        return float(val)
+    except Exception:
+        # If evaluating the RHS fails for some (t, y), just return 0 to keep the solver alive.
+        return 0.0
 
 if show_sol1:
-    ts1, ys1 = rk4_solve(f_scalar, t0_1, y0_1, t_min, t_max, n_steps=800)
-    curve1 = p.line(ts1, ys1, line_width=3, line_color="blue")
-    legend_items.append(("Solution 1", [curve1]))
-    p.scatter(
-    [t0_1], [y0_1],
-    marker="circle",
-    size=8,
-    color="blue")
-    legend_items.append(("Initial condition 1", [p.scatter(
+    try:
+        ts1, ys1 = rk4_solve(f_scalar, t0_1, y0_1, t_min, t_max, n_steps=800)
+        curve1 = p.line(ts1, ys1, line_width=3, line_color="blue")
+        legend_items.append(("Solution 1", [curve1]))
+        p.scatter(
         [t0_1], [y0_1],
         marker="circle",
         size=8,
-        color="yellow",
-    )]))
+        color="blue")
+        legend_items.append(("Initial condition 1", [p.scatter(
+            [t0_1], [y0_1],
+            marker="circle",
+            size=8,
+            color="yellow",
+        )]))
+    except Exception as e:
+    st.warning(f"Could not compute solution curve 1: {e}")
 
 
 if show_sol2:
-    ts2, ys2 = rk4_solve(f_scalar, t0_2, y0_2, t_min, t_max, n_steps=800)
-    curve2 = p.line(ts2, ys2, line_width=3, line_color="red", line_dash="dashed")
-    legend_items.append(("Solution 2", [curve2]))
-    p.scatter(
-    [t0_2], [y0_2],
-    marker="circle",
-    size=8,
-    color="red")
-    legend_items.append(("Initial condition 2", [p.scatter(
+    try:
+        ts2, ys2 = rk4_solve(f_scalar, t0_2, y0_2, t_min, t_max, n_steps=800)
+        curve2 = p.line(ts2, ys2, line_width=3, line_color="red", line_dash="dashed")
+        legend_items.append(("Solution 2", [curve2]))
+        p.scatter(
         [t0_2], [y0_2],
         marker="circle",
         size=8,
-        color="green",
-    )]))
-
+        color="red")
+        legend_items.append(("Initial condition 2", [p.scatter(
+            [t0_2], [y0_2],
+            marker="circle",
+            size=8,
+            color="green",
+        )]))
+    except Exception as e:
+        st.warning(f"Could not compute solution curve 1: {e}")
 
 if legend_items:
     legend = Legend(items=legend_items)
