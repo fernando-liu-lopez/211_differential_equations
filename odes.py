@@ -4,7 +4,7 @@ import numpy as np
 # Pages
 pages = {
     'Home': [
-        st.Page('pages/home.py', title = 'Math 211 Differential Equations')
+        st.Page('pages/home.py', title = 'Home')
     ],
     'First Order ODEs': [
         st.Page('pages/newton_cooling.py', title = 'Newton\'s Law of Cooling'),
