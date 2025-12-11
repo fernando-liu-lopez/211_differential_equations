@@ -221,4 +221,4 @@ else:
     n_frames = 80
     for t_cur in np.linspace(0.0, float(t_max), n_frames):
         draw_frame(t_cur)
-        time.sleep(0.03)
+        time.sleep(0.01)
