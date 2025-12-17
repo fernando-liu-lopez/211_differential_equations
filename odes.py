@@ -14,9 +14,7 @@ pages = {
         st.Page('pages/rc_circuits.py', title = 'RC Circuits')
     ],
     'Second Order Linear ODEs': [
-        st.Page('pages/harmonic_oscillators.py', title = 'Harmonic Oscillators'),
-        st.Page('pages/mass_spring.py',title='Mass-Spring Systems'),
-        st.Page('pages/rlc_circuits.py', title = 'RLC Circuits'),
+        st.Page('pages/mass_spring.py',title='Mass-Spring Systems')
     ]
 }
 
