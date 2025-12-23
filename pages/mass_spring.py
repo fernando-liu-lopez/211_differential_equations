@@ -145,7 +145,8 @@ st.title("Mass–Spring System")
 
 st.markdown(r"""We model the motion of a mass on a vertical spring with damping by:""")
 st.latex(r"""m x''(t) + b x'(t) + k x(t) = 0,\hspace{0.2in}\textnormal{where}\quad m: \text{mass} \quad\quad b: \text{damping coefficient} \quad\quad k: \text{spring constant}.""")
-st.markdown(r"""Let's visualize the motion of the mass-spring:""")
+
+st.divider()
 
 
 col_controls, col_animation = st.columns([1, 4])

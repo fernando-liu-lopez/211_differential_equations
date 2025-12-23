@@ -134,7 +134,7 @@ with st.form("slope_field_form"):
         with curve_2:
             t0_2 = st.number_input("Curve 2: Initial t₀", value=0.0, step=1.0)
             y0_2 = st.number_input("Curve 2: Initial y₀", value=-1.0, step=1.0)
-            show_sol2 = st.checkbox("Show solution curve 2", value=False)
+            show_sol2 = st.checkbox("Show solution curve 2", value=True)
     with col_grid:
         st.markdown("**Graph Settings:**")
         grid_left, grid_right = st.columns(2)
