@@ -36,6 +36,14 @@ with col1:
         """
     )
     
+    st.subheader("Linear Algebra")
+    st.markdown(
+        """
+        **[Kirchhoff's Circuit Laws](./kirchhoff_currents)**  
+        Find current flows in circuits using Kirchhoff's Current Law and systems of linear equations.
+        """
+    )
+    
 with col2:
     st.subheader("Second-order ODEs")
 

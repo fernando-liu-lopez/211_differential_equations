@@ -11,10 +11,13 @@ pages = {
         st.Page('pages/slope_fields.py', title = 'Slope Fields')
     ],
     'Linear Algebra': [
-        st.Page('pages/kirchhoff_currents.py', title = 'Circuits: Kirchhoff\'s Current Law')
+        st.Page('pages/kirchhoff_currents.py', title = 'Kirchhoff\'s Circuit Laws')
     ],
     'Second Order Linear ODEs': [
         st.Page('pages/mass_spring.py',title='Mass-Spring Systems')
+    ],
+    'Miscellaneous': [
+        st.Page('pages/circuit_terms.py',title='Basic Circuit Terms')
     ]
 }
 

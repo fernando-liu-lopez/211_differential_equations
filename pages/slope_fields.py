@@ -5,83 +5,7 @@ from bokeh.plotting import figure
 from bokeh.models import Legend
 from streamlit_bokeh import streamlit_bokeh
 
-# ================================
-#   ODE model and helpers
-# ================================
-def make_rhs(expr: str):
-    """
-    Given a string expression f(t, y), return a function f(t, y)
-    that can be evaluated on numpy arrays or scalars, using numpy math.
-    """
-    expr = expr.strip()
-    if not expr:
-        raise ValueError("Expression for dy/dt is empty.")
-
-    # We'll allow numpy functions: sin, cos, exp, log, etc.
-    # t and y will be in the local namespace.
-    def f(t, y):
-        local_dict = {"t": t, "y": y, "np": np}
-        # Expose common numpy functions directly for convenience
-        for name in ["sin", "cos", "tan", "exp", "log", "sqrt", "pi"]:
-            local_dict[name] = getattr(np, name, None)
-        return eval(expr, {"__builtins__": {}}, local_dict)
-
-    return f
-
-
-def rk4_solve(f_scalar, t0, y0, t_min, t_max, n_steps=1000):
-    """
-    Simple RK4 integrator that integrates both forward and backward
-    from (t0, y0) across [t_min, t_max].
-    f_scalar: function(t, y) -> float
-    """
-    # Choose step size
-    h = (t_max - t_min) / n_steps
-
-    # ---- forward from t0 to t_max ----
-    if t0 < t_max:
-        ts_f = np.arange(t0, t_max + 1e-12, h)
-    else:
-        ts_f = np.array([t0])
-    ys_f = np.empty_like(ts_f)
-    if len(ts_f) > 0:
-        ys_f[0] = y0
-        for i in range(len(ts_f) - 1):
-            t, y = ts_f[i], ys_f[i]
-            k1 = f_scalar(t, y)
-            k2 = f_scalar(t + 0.5 * h, y + 0.5 * h * k1)
-            k3 = f_scalar(t + 0.5 * h, y + 0.5 * h * k2)
-            k4 = f_scalar(t + h, y + h * k3)
-            ys_f[i + 1] = y + h * (k1 + 2*k2 + 2*k3 + k4) / 6.0
-
-    # ---- backward from t0 to t_min ----
-    if t0 > t_min:
-        ts_b = np.arange(t0, t_min - 1e-12, -h)
-    else:
-        ts_b = np.array([t0])
-    ys_b = np.empty_like(ts_b)
-    if len(ts_b) > 0:
-        ys_b[0] = y0
-        for i in range(len(ts_b) - 1):
-            t, y = ts_b[i], ys_b[i]
-            # step backwards -> step size is -h
-            hm = -h
-            k1 = f_scalar(t, y)
-            k2 = f_scalar(t + 0.5 * hm, y + 0.5 * hm * k1)
-            k3 = f_scalar(t + 0.5 * hm, y + 0.5 * hm * k2)
-            k4 = f_scalar(t + hm, y + hm * k3)
-            ys_b[i + 1] = y + hm * (k1 + 2*k2 + 2*k3 + k4) / 6.0
-
-    # Combine (backward reversed, then forward, without double-counting t0)
-    ts_b = ts_b[::-1]
-    ys_b = ys_b[::-1]
-    if len(ts_f) > 0:
-        ts = np.concatenate([ts_b[:-1], ts_f])
-        ys = np.concatenate([ys_b[:-1], ys_f])
-    else:
-        ts, ys = ts_b, ys_b
-
-    return ts, ys
+from helpers import make_function, integrate
 
 
 # ================================
@@ -169,10 +93,10 @@ if t_max <= t_min or y_max <= y_min:
     st.stop()
 
 # -----------------------------
-#   Build RHS function
+#   Build f(t,y) function
 # -----------------------------
 try:
-    f = make_rhs(expr)
+    f = make_function(expr)
     # test evaluation at a scalar point to catch obvious errors early
     _test_val = float(f(0.0, 0.0))
 except Exception as e:
@@ -264,7 +188,7 @@ def f_scalar(t, y):
 
 if show_sol1:
     try:
-        ts1, ys1 = rk4_solve(f_scalar, t0_1, y0_1, t_min, t_max, n_steps=800)
+        ts1, ys1 = integrate(f_scalar, t0_1, y0_1, t_min, t_max, n_steps=800)
         curve1 = p.line(ts1, ys1, line_width=3, line_color="blue")
         legend_items.append(("Solution 1", [curve1]))
         p.scatter(
@@ -284,7 +208,7 @@ if show_sol1:
 
 if show_sol2:
     try:
-        ts2, ys2 = rk4_solve(f_scalar, t0_2, y0_2, t_min, t_max, n_steps=800)
+        ts2, ys2 = integrate(f_scalar, t0_2, y0_2, t_min, t_max, n_steps=800)
         curve2 = p.line(ts2, ys2, line_width=3, line_color="red", line_dash="dashed")
         legend_items.append(("Solution 2", [curve2]))
         p.scatter(
