@@ -9,15 +9,21 @@ from helpers import centered_pyplot, draw_current_source, draw_source, draw_node
 
 st.title("Kirchhoff’s Circuit Laws")
 
-st.write("This page will cover Kirchhoff’s Current Law and Kirchhoff’s Voltage Law. For a crash course on basic circuit terminology, see the page below:")
+st.write("""This page will cover an application of linear algebra (specifically, solving systems of linear equations) to electrical circuits using
+All the terminology you need to know about circuits can be found here:""")
 st.page_link("pages/circuit_terms.py", label="Basic Circuit Terms")
+st.write("""If electrical circuits are not your thing, know that the same underlying mathematics (namely, using systems of linear equations to model conserved flow through networks), 
+can be used to model many other types of phenomena,
+including: liquid in pipes, blood flow through veins, traffic flow on roads, heat flow through certain materials, and more!""")
 
 st.header("1. Kirchhoff’s Current Law")
 st.markdown(
-    """Kirchhoff’s Current Law states that at any junction in an electrical circuit, the sum of currents leaving the node equals the sum of currents entering. """)
+    """Kirchhoff’s Current Law states that at any junction in an electrical circuit,
+the current traveling through a junction is a conserved quantity. In other words,
+the sum of currents entering and leaving the junction must be equal. """)
 st.markdown("""It is standard to label currents with the letter 'I', in which case Kirchhoff's Current Law states:""")
 
-st.latex(r"\sum I_{in} = \sum I_{out}")
+st.latex(r"\sum I_{in} = \sum I_{out}.")
 st.markdown("""For example, the junction drawn below satisfies:""")
 st.latex(r"I_1 = I_2 + I_3.")
 # draw circuit 0

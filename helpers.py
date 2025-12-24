@@ -1,5 +1,6 @@
 import streamlit as st
 import numpy as np
+from numpy import radians as rad
 import matplotlib.pyplot as plt
 from matplotlib.patches import FancyArrowPatch
 
@@ -94,7 +95,11 @@ def integrate(f_scalar, t0, y0, t_min, t_max, n_steps=1000):
     return ts, ys
 
 
+# -----------------------------
+# Other Matplotlib Functions
+# -----------------------------
 
+    
 # -----------------------------
 # Drawing Circuit Diagrams
 # -----------------------------
