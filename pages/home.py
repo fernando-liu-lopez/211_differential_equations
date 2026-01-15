@@ -31,7 +31,7 @@ with col1:
     )
     st.markdown(
         """
-        **[Slope Field Plotter](./Slope_Fields)**  
+        **[Slope Field Plotter](./slope_fields)**  
         Visualize direction fields and solution curves for first-order ODEs with initial conditions.
         """
     )
