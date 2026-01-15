@@ -1,6 +1,6 @@
-streamlit>=1.52
-bokeh==3.7.1
-streamlit-bokeh==3.7.1
+streamlit
+bokeh
+streamlit-bokeh
 sympy
 numpy
 matplotlib

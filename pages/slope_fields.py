@@ -87,9 +87,13 @@ with st.form("slope_field_form"):
             st.warning("Require y_max > y_min.")
         
     submitted = st.form_submit_button("Plot")
-
+    
 # Stop if bounds invalid
 if t_max <= t_min or y_max <= y_min:
+    st.stop()
+    
+if not submitted:
+    st.info("Enter a function, then press **Plot**.")
     st.stop()
 
 # -----------------------------
@@ -223,7 +227,7 @@ if show_sol2:
             color="green",
         )]))
     except Exception as e:
-        st.warning(f"Could not compute solution curve 1: {e}")
+        st.warning(f"Could not compute solution curve 2: {e}")
 
 if legend_items:
     legend = Legend(items=legend_items)
@@ -233,4 +237,6 @@ if legend_items:
 # -----------------------------
 #   Render in Streamlit
 # -----------------------------
+
+    
 streamlit_bokeh(p, use_container_width=False, theme="streamlit", key="slope_field_plot")
