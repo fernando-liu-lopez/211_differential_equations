@@ -1,6 +1,7 @@
 import numpy as np
 import streamlit as st
 import sympy as sp
+import bokeh
 from bokeh.plotting import figure
 from bokeh.models import Legend
 from streamlit_bokeh import streamlit_bokeh
