@@ -55,7 +55,7 @@ with col2:
 
     st.markdown(
         """
-        **[Mass–Spring–Damper System](./Mass_Spring)**  
+        **[Mass–Spring–Damper System](./mass_spring)**  
         Animate the motion governed by a mass-spring-damper system, including underdamped, critically damped, and overdamped cases.
         """
     )
