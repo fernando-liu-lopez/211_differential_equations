@@ -1,9 +1,7 @@
 import numpy as np
 import streamlit as st
 import sympy as sp
-from bokeh.plotting import figure
-from bokeh.models import Legend
-from streamlit_bokeh import streamlit_bokeh
+import matplotlib.pyplot as plt
 
 
 # -----------------------------
@@ -28,7 +26,13 @@ st.set_page_config(
 
 st.title("Newton's Law of Cooling")
 
-st.markdown("""**Newton's law of cooling** describes the rate at which an object cools down (or heats up) when exposed to a different temperature environment. The law states that the rate of change of the temperature of an object is proportional to the difference between its own temperature and the temperature of its surroundings.""")
+st.subheader("Introduction:")
+st.markdown("You and your friend take your drinks outside on a snowy winter day. Your friend is drinking hot tea, while you have a glass of room temperature water. Your friend notices their tea is cooling down quickly, so they conjecture that the rate at which an object changes temperature is proportional to the temperature of the surrounding environment. Your drink feels a little colder, but not by much. Do you think your friend's conjecture is accurate? How would you change the conjecture to better model what is happening?")
+st.markdown("Once you have some ideas, read on and compare your models to Isaac Newton's.")
+
+st.divider()
+
+st.markdown("""**Newton's law of cooling** states that the rate of change of the temperature of an object is proportional to the ***difference*** between its own temperature and the temperature of its surroundings.""")
 st.markdown("""Here, we will (1) breakdown how to write down an ODE that models Newton's law, and (2) visualize the solutions to the ODE in different scenarios, and (3) explore different scenarios where we can apply Newton's law.""")
 st.divider()
 
@@ -81,74 +85,52 @@ with st.form("newton_form"):
     
     submitted = st.form_submit_button("Plot")
 
-# Fixed y-axis range based on slider ranges
-Y_MIN = min(T0_1,T0_2, Tenv)
-Y_MAX = max(T0_1,T0_2, Tenv)
+if submitted:
+    # Fixed y-axis range based on slider ranges
+    Y_MIN = min(T0_1,T0_2, Tenv-2)
+    Y_MAX = max(T0_1,T0_2, Tenv)
 
-# Time grid (fixed for all curves)
-t = np.linspace(0.0, T_MAX, 600)
+    # Time grid (fixed for all curves)
+    t = np.linspace(0.0, T_MAX, 600)
 
 
-# -----------------------------
-#   Compute curves
-# -----------------------------
-T1 = newton_cooling_solution(t, T0_1, Tenv, k_1)
-T2 = newton_cooling_solution(t, T0_2, Tenv, k_2)
+    # -----------------------------
+    #   Compute curves
+    # -----------------------------
+    T1 = newton_cooling_solution(t, T0_1, Tenv, k_1)
+    T2 = newton_cooling_solution(t, T0_2, Tenv, k_2)
 
-# -----------------------------
-#   Bokeh figure (square, fixed axes)
-# -----------------------------
-p = figure(
-    width=700,
-    height=500,
-    x_axis_label="Time t",
-    y_axis_label="Temperature",
-    x_range=(0, T_MAX),
-    y_range=(Y_MIN, Y_MAX)
-)
+    # -----------------------------
+    #   Matplotlib figure (fixed axes)
+    # -----------------------------
+    fig, ax = plt.subplots(figsize=(7, 5))  # ~700x500 px feel depending on DPI
 
-# Keep plot shape square-ish
-p.sizing_mode = "fixed"
+    ax.set_title('Newton\'s Law of Cooling', fontsize=16)
+    ax.set_xlabel("Time t")
+    ax.set_ylabel("Temperature")
+    ax.set_xlim(0, T_MAX)
+    ax.set_ylim(Y_MIN, Y_MAX)
 
-# Curve 1 + ambient line
-env = p.line(
-    [0, T_MAX],
-    [Tenv, Tenv],
-    line_width=2,
-    line_dash="dashed",
-    line_color="yellow",
-    level='overlay'
-)
+    # Curves
+    if show_curve_1:
+        ax.plot(t, T1, linewidth=3, label="Object 1 Temp")
 
-legend_items = [("Ambient Temp", [env])]
+    if show_curve_2:
+        ax.plot(t, T2, linewidth=3, label="Object 2 Temp")
 
-if show_curve_1:
-    curve1 = p.line(
-        t,
-        T1,
-        line_width=3,
-        line_color="blue",
-    )
-    legend_items.extend([("Object 1 Temp", [curve1])])
+    # Ambient temperature (dashed), always shown
+    ax.plot([0, T_MAX], [Tenv, Tenv], linestyle="--", linewidth=2, label="Ambient Temp")
+    
+    # Legend (static; checkboxes control visibility)
+    ax.legend(loc="center left", bbox_to_anchor=(1.02, 0.5), borderaxespad=0.0)
 
-# Curve 2 + ambient line
-if show_curve_2:
-    curve2 = p.line(
-        t,
-        T2,
-        line_width=3,
-        line_color="red",
-    )
-    legend_items.extend([("Object 2 Temp", [curve2])])
+    # Keep the plot area reasonably square-ish (visual consistency)
+    # This sets the *box* aspect ratio, not equal data scaling.
+    ax.set_box_aspect(1)
 
-legend = Legend(items=legend_items, location="center")
-p.add_layout(legend, "right")
-p.legend.click_policy = "hide"
-
-# -----------------------------
-#   Render Bokeh in Streamlit
-# -----------------------------
-streamlit_bokeh(p, use_container_width=False, theme="streamlit", key="newton_plot")
+    # Render in Streamlit
+    st.pyplot(fig, use_container_width=False)
+    plt.close(fig)
 
 st.divider()
 
@@ -157,4 +139,4 @@ st.subheader("3. Exploration and Discussion Questions:")
 st.markdown("""1. In words, how would you describe the behavior of the solutions to Newton's law of cooling?""")
 st.markdown("""2. How would you expect solutions to look if the ambient temperature is higher than the initial temperature of the object? Check your intuition by changing the ambient temperature in the grapher above.""")
 st.markdown("""3. How does increasing/decreasing the cooling constant affect the rate at which the temperature changes? What sort of objects might have a high/low cooling constants?""")
-st.markdown("""4. Your house thermostat is set to 70 degrees Fahrenheit. You have soup cooking at 170 degrees Fahrenheit for a dinner party. You put some of the soup in a bowl to cool for 5 minutes and notice a temperature drop of around 30 degrees. Using the grapher above, approximate the cooling constant for the soup you'll serve. If the soup is best enjoyed between 120 and 140 degrees Fahrenheit, how long should you let the soup cool before serving? How long do your guests have to eat before the soup is too cold?""")
+st.markdown("""4. Your house thermostat is set to 70 degrees Fahrenheit. You have soup cooking at 170 degrees Fahrenheit for a dinner party. You put some of the soup in a bowl to cool for 5 minutes and notice a temperature drop of around 30 degrees. Using the grapher above, approximate the cooling constant for the soup you'll serve. If the soup is best enjoyed between 110 and 130 degrees Fahrenheit, how long should you let the soup cool before serving? How long do your guests have to eat before the soup is too cold?""")
