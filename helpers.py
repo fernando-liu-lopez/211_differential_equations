@@ -489,3 +489,5 @@ def draw_graph_ax(ax, t_vals, x_vals, t_max, x_min, x_max, t_current=None):
             ax.scatter([t_current], [x_cur], color="orange", s=40)
 
     ax.legend(loc="upper right")
+
+## MARKOV CHAINS
